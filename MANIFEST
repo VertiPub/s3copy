@@ -1,4 +1,4 @@
 LICENSE.txt
+requirements.txt
+s3copy
 setup.py
-bin/s3copy
-test/__init__.py
