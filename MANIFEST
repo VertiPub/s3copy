@@ -1,0 +1,4 @@
+LICENSE.txt
+setup.py
+bin/s3copy
+test/__init__.py
