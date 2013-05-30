@@ -46,9 +46,11 @@ Stable releases are published to https://pypi.python.org/pypi/s3copy/, for easy 
 The only requirement is a working python installation and either easy_install or pip.
 
 ::
+
   $ sudo easy_install s3copy
 
 ::
+
   $ sudo pip install s3copy
 
 Stable releases are tested on Linux and MacOS.
