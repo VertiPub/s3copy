@@ -39,6 +39,19 @@ level, and appends its log to a file named log.txt.
 
 The above example prints help.
 
+Installation
+------------
+
+Stable releases are published to https://pypi.python.org/pypi/s3copy/, for easy installation.
+The only requirement is a working python installation and either easy_install or pip.
+
+::
+  $ sudo easy_install s3copy
+
+::
+  $ sudo pip install s3copy
+
+
 Source and Destination Paths
 ----------------------------
 
