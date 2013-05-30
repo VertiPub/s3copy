@@ -51,6 +51,7 @@ The only requirement is a working python installation and either easy_install or
 ::
   $ sudo pip install s3copy
 
+Stable releases are tested on Linux and MacOS.
 
 Source and Destination Paths
 ----------------------------
