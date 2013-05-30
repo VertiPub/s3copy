@@ -43,7 +43,7 @@ Installation
 ------------
 
 Stable releases are published to https://pypi.python.org/pypi/s3copy/, for easy installation.
-The only requirement is a working python installation and either easy_install or pip.
+The only requirement is a working Python installation and either easy_install or pip.
 
 ::
 
