@@ -1124,7 +1124,7 @@ def main():
         log_dst = logging.FileHandler(options.log_dest)
 
     formatter = logging.Formatter('%(asctime)-15s: %(levelname)-8s '
-                                  '(message)s')
+                                  '%(message)s')
     log_dst.setFormatter(formatter)
     log_dst.setLevel(getattr(logging, options.log_level.upper()))
     logger.addHandler(log_dst)
