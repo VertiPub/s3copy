@@ -183,6 +183,71 @@ credentials by using the ``-d`` option.
 You can grant access to files created on the destination by specifying
 the ``--acl-grant`` option. The grantee must be an email address.
 
+Validation
+----------
+
+s3copy takes great care to make sure that all copies are
+successful. However, if you would like to do additional validation
+after a copy, do something like the following. This process could of
+course be automated, but it is spelled out in detail here for
+transparency.
+
+First, use s3cmd to get a full list of the source and destination
+buckets: 
+
+::
+  
+    s3cmd ls -r --list-md5 s3://myinbucket > inbuck.ls.raw.txt
+    s3cmd ls -r --list-md5 s3://myoutbucket > outbuck.ls.raw.txt
+
+Now, strip off the filename prefixes and rearrange the fields to make
+them easy to compare:
+
+::
+
+    cat inbuck.ls.raw.txt | awk '{print $5, $4, $3}' | sed 's@s3://com.verticloud.cluster.logs/@@' | sort > inbuck.files.txt
+    cat outbuck.ls.raw.txt | awk '{print $5, $4, $3}' | sed 's@s3://com.altiscale.max.test3/@@' | sort > outbuck.files.txt
+
+The files that were not multi-part in the inbucket can be compared
+directly fully with thier counterparts, including the md5 sums:
+
+::
+
+    cat inbuck.files.txt | grep ' [0-9a-f]\{32\} ' > inbuck.1part.files.txt
+    comm -1 -2 inbuck.1part.files.txt outbuck.files.txt | diff - inbuck.1part.files.txt
+
+If the last command produces no output, those files were all
+successfully copied.
+
+The files that were multi-part in the inbucket can only be compared
+for size against their counterparts. Strip out the md5 sums:
+
+::
+
+    cat inbuck.files.txt | grep -v ' [0-9a-f]\{32\} ' | awk '{print $1, $3}' > inbuck.mpart.files.txt
+    cat outbuck.files.txt | awk '{print $1, $3}' > outbuck.files.nomd5.txt
+
+Then compare:
+
+::
+ 
+    comm -1 -2 inbuck.mpart.files.txt outbuck.files.nomd5.txt | diff - inbuck.mpart.files.txt
+
+Again, the last command should produce no output.
+
+Cleanup
+-------
+
+If multipart files were encountered, s3copy will create files in
+temporary location on the destination bucket. It does not delete them
+because they are used for restartability. If you would like to delete
+them, do the following
+
+    s3cmd ls -r --list-md5 s3://myoutbucket/temp | awk '{print $5}' | xargs -n 1 s3cmd del
+
+s3cmd does not yet support AWS's multiple-file-delete operation yet,
+so this is single threaded.
+
 Testing Notes
 ------------
 
